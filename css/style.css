@@ -49,10 +49,12 @@ a:hover { color: var(--accent); }
   max-width: var(--max-w);
   margin: 0 auto;
   padding: 0 var(--pad);
-  height: var(--nav-h);
+  min-height: var(--nav-h);
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
+  row-gap: 8px;
 }
 
 .nav-logo {
@@ -146,4 +148,15 @@ a:hover { color: var(--accent); }
   :root { --nav-h: 60px; --pad: 20px; }
   .nav-links { gap: 16px; }
   .footer { flex-direction: column; gap: 6px; }
+}
+
+@media (max-width: 480px) {
+  .nav-links { gap: 10px; }
+  .nav-links a { font-size: 12px; }
+  .nav-logo-img { height: 26px; }
+}
+
+@media (max-width: 360px) {
+  .nav-links { gap: 6px; }
+  .nav-links a { font-size: 11px; }
 }
