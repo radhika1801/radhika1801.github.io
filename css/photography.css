@@ -1,0 +1,202 @@
+/* =============================================================================
+   photography.css — Scattered series layout + full-screen viewer with filmstrip
+   Inspired by leonardoliviero.com
+   ============================================================================= */
+
+/* ── Scattered series grid ────────────────────────────────────────────────────── */
+.series-layout {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: 24px;
+  row-gap: 120px;
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 80px var(--pad) 64px;
+}
+
+/* ── Per-series positioning & stagger ────────────────────────────────────────── */
+
+/* Row 1 — Fairbanks medium-large left, HK medium right, gently lower */
+.series-item:nth-child(1) { grid-column: 1 / 7;  grid-row: 1; padding-top: 0; }
+.series-item:nth-child(2) { grid-column: 8 / 13; grid-row: 1; padding-top: 100px; }
+
+/* Row 2 — Jaipur small left, Bryce medium-large right */
+.series-item:nth-child(3) { grid-column: 1 / 5;  grid-row: 2; padding-top: 40px; }
+.series-item:nth-child(4) { grid-column: 6 / 12; grid-row: 2; padding-top: 0; }
+
+/* Row 3 — Lower Antelope medium left dropping, Valley of Fire medium right */
+.series-item:nth-child(5) { grid-column: 2 / 6;  grid-row: 3; padding-top: 100px; }
+.series-item:nth-child(6) { grid-column: 7 / 13; grid-row: 3; padding-top: 0; }
+
+/* ── Series card ──────────────────────────────────────────────────────────────── */
+.series-item {
+  cursor: pointer;
+}
+
+.series-thumb {
+  position: relative;
+  overflow: hidden;
+  background: var(--light);
+}
+
+.ascii-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  transition: opacity 0.55s ease;
+  pointer-events: none;
+}
+
+.series-thumb img {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.65s ease, filter 0.5s ease;
+  filter: sepia(10%) saturate(88%);
+}
+.series-item:hover .series-thumb img {
+  transform: scale(1.03);
+  filter: sepia(0%) saturate(105%);
+}
+
+/* ── Series label ─────────────────────────────────────────────────────────────── */
+.series-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 10px 0 0;
+}
+
+.series-name {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: rgb(10, 80, 41);
+}
+
+.series-count {
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+/* ── Series viewer ────────────────────────────────────────────────────────────── */
+.series-viewer {
+  display: none;
+  position: fixed;
+  top: var(--nav-h);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 150;
+  background: var(--bg);
+  flex-direction: column;
+}
+.series-viewer.open { display: flex; }
+
+/* Prev / next arrows */
+.sv-prev, .sv-next {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-family: var(--font);
+  font-size: 14px;
+  color: #ccc;
+  cursor: pointer;
+  padding: 24px 16px;
+  transition: color 0.2s;
+  z-index: 10;
+}
+.sv-prev { left: 8px; }
+.sv-next { right: 8px; }
+.sv-prev:hover, .sv-next:hover { color: var(--fg); }
+
+/* Main image — contained, breathing room, smaller */
+.sv-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 72px 140px 28px;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.sv-main img {
+  max-width: 72%;
+  max-height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* Filmstrip */
+.sv-strip-wrap {
+  flex: 0 0 auto;
+  padding: 16px 0;
+  background: var(--bg);
+}
+
+.sv-strip {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  align-items: center;
+  justify-content: center;
+  padding: 0 40px;
+}
+.sv-strip::-webkit-scrollbar { display: none; }
+
+/* Thumbnails: fixed height, auto width so landscape images stay landscape */
+.sv-thumb {
+  flex: 0 0 auto;
+  height: 52px;
+  width: auto;
+  overflow: hidden;
+  cursor: pointer;
+  opacity: 0.3;
+  transition: opacity 0.2s, outline 0.15s;
+}
+.sv-thumb:hover  { opacity: 0.65; }
+.sv-thumb.active {
+  opacity: 1;
+  outline: 1px solid #999;
+  outline-offset: 2px;
+}
+
+.sv-thumb img {
+  height: 100%;
+  width: auto;
+  display: block;
+  object-fit: cover;
+}
+
+/* ── Responsive ───────────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .series-layout { row-gap: 60px; }
+  .series-item:nth-child(1) { grid-column: 1 / 8;  grid-row: 1; padding-top: 0; }
+  .series-item:nth-child(2) { grid-column: 8 / 13; grid-row: 1; padding-top: 100px; }
+  .series-item:nth-child(3) { grid-column: 1 / 5;  grid-row: 2; padding-top: 40px; }
+  .series-item:nth-child(4) { grid-column: 5 / 13; grid-row: 2; padding-top: 0; }
+  .series-item:nth-child(5) { grid-column: 1 / 5;  grid-row: 3; padding-top: 80px; }
+  .series-item:nth-child(6) { grid-column: 5 / 13; grid-row: 3; padding-top: 0; }
+}
+
+@media (max-width: 600px) {
+  .series-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+    padding: 32px var(--pad) 80px;
+  }
+  .series-item:nth-child(n) { padding-top: 0; }
+  .sv-main { padding: 48px 48px 16px; }
+  .sv-strip-wrap { padding: 12px 16px; }
+  .sv-thumb { height: 40px; }
+}
